@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Elegant Dark Clock</title>
+
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #0d0d0d;
+        font-family: "Segoe UI", Arial, sans-serif;
+        user-select: none;
+    }
+
+    .clock-box {
+        padding: 35px 50px;
+        border-radius: 22px;
+        border: 2px solid rgba(255, 255, 255, 0.08);
+        background: rgba(20, 20, 20, 0.6);
+        box-shadow: 
+            0 0 30px rgba(0, 0, 0, 0.8),
+            inset 0 0 15px rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(8px);
+        text-align: center;
+        transition: 0.2s ease;
+    }
+
+    .clock-box:active {
+        transform: scale(0.98);
+        box-shadow:
+            0 0 40px rgba(0, 0, 0, 0.9),
+            0 0 10px rgba(255, 255, 255, 0.08);
+    }
+
+    .time {
+        font-size: 95px;
+        font-weight: 700;
+        color: white;
+        letter-spacing: 3px;
+    }
+
+    .seconds-box {
+        margin-top: 10px;
+        font-size: 22px;
+        color: #ccc;
+        opacity: 0.9;
+    }
+
+    .seconds-label {
+        font-weight: 600;
+        margin-right: 6px;
+        color: #888;
+    }
+
+    /* Toast */
+    .toast {
+        position: fixed;
+        bottom: 35px;
+        background: #00c853;
+        color: white;
+        padding: 14px 24px;
+        border-radius: 12px;
+        font-size: 18px;
+        opacity: 0;
+        transition: 0.3s;
+        letter-spacing: 1px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="clock-box" id="clockBox">
+    <div class="time" id="time">00:00</div>
+
+    <div class="seconds-box">
+        <span class="seconds-label">seconds:</span>
+        <span id="seconds">00</span>
+    </div>
+</div>
+
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+function updateClock() {
+    const now = new Date();
+    let h = now.getHours().toString().padStart(2, "0");
+    let m = now.getMinutes().toString().padStart(2, "0");
+    let s = now.getSeconds().toString().padStart(2, "0");
+
+    document.getElementById("time").textContent = `${h}:${m}`;
+    document.getElementById("seconds").textContent = s;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// Copy HH:MM on click
+document.getElementById("clockBox").addEventListener("click", async () => {
+    const textToCopy = document.getElementById("time").textContent;
+
+    try {
+        await navigator.clipboard.writeText(textToCopy);
+
+        const toast = document.getElementById("toast");
+        toast.style.opacity = 1;
+        setTimeout(() => (toast.style.opacity = 0), 1200);
+    } catch {
+        alert("Copy not supported");
+    }
+});
+</script>
+
+</body>
+</html>
